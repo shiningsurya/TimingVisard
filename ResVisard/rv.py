@@ -41,7 +41,7 @@ class VisRes(wx.Frame):
         wx.Frame.__init__(self, None, -1, self.title)
         
         self.data = [5, 6, 9, 14]
-        
+        self.Maximize(True) 
         self.create_menu()
         self.create_status_bar()
         self.create_main_panel()
@@ -77,7 +77,7 @@ class VisRes(wx.Frame):
              * Control panel for interaction
         """
         self.panel = wx.Panel(self)
-        
+         
         # Create the mpl Figure and FigCanvas objects. 
         # 5x4 inches, 100 dots-per-inch
         #
@@ -173,7 +173,10 @@ class VisRes(wx.Frame):
             picker=5)
         
         self.canvas.draw()
-    
+    def on_fit(self,event):
+        '''
+        Calls the fit routine
+        '''
     def on_cb_grid(self, event):
         self.draw_figure()
     
@@ -259,5 +262,6 @@ if __name__ == '__main__':
     app = wx.PySimpleApp()
     app.frame = VisRes()
     app.frame.Show()
+    print "Display size ",wx.DisplaySize()
     app.MainLoop()
-
+    

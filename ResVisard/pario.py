@@ -83,10 +83,10 @@ class ParIO(object):
         self.tpar.write('PSRJ ' + self.pulsar_name + ' \n')
         # second the PARs
         for pname, pval, pflag, punc in zip(self.name_pars, self.val_pars, self.flag_pars, self.uncer_pars):
-            self.tpar.write(pname + ' ' + \
-                    pval + ' ' + \
-                    pflag + ' ' + \
-                    punc + ' ' + '\n')
+            self.tpar.write(str(pname) + ' ' + \
+                    str(pval) + ' ' + \
+                    str(pflag) + ' ' + \
+                    str(punc) + ' ' + '\n')
         # third and last everything else
         self.tpar.write(self.everything_else)
         self.tpar.flush()

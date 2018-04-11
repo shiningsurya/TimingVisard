@@ -1,3 +1,7 @@
 .temp_par_file
 *.pyc
 *.swp
+.temp_par_file
+*.log
+*.pyc
+*.swp

@@ -19,7 +19,8 @@ class Param(scrolled.ScrolledPanel):
         self.max = smax 
         self.sdef = sdef
         self.xo, self.yo = pos 
-
+        self.checkboxes = [] # container for checkboxes
+        self.sliders = [] # container for sliders
         self.initui()
         self.SetupScrolling()
         self.SetAutoLayout(True)
@@ -28,20 +29,34 @@ class Param(scrolled.ScrolledPanel):
         vbox = wx.BoxSizer(wx.VERTICAL)
         for i,n in enumerate(self.par.name_pars):
             cb = wx.CheckBox(self,label=n,pos=(self.xo,self.yo+5))
-    #TODO:        self.Bind(wx.EVT_CHECKBOX,self.on_cb, cb)
+            cb.Bind(wx.EVT_CHECKBOX,self.on_cb)
+            self.checkboxes.append(cb)
             vbox.Add(cb,0,wx.ALIGN_LEFT,5)
-            vbox.Add(wx.Slider(self,5,0,-100,100,(self.xo,self.yo+20),(300,60),style= wx.SL_LABELS|wx.SL_AUTOTICKS),0,wx.ALIGN_LEFT,5)
+            sl = wx.Slider(self,5,0,-100,100,(self.xo,self.yo+20),(300,60),style= wx.SL_LABELS|wx.SL_AUTOTICKS)
+            self.sliders.append(sl)
+            vbox.Add(sl,0,wx.ALIGN_LEFT,5)
             # vbox.Add(wx.StaticLine(self,pos=(self.xo,self.yo+65),size=(250,-1)))
         self.SetSizer(vbox)
         #
-    def read_cb(self):
-        return self.cb.GetValue()
-    def read_slider(self):
-        return self.slider.GetValue()
+    def update_book(self):
+        # returns the params to update
+        names, values = [],[] # to be sent to pario
+        for i,(cb,sl) in enumerate(zip(self.checkboxes,self.sliders)):
+            if cb.GetValue():
+                n = self.par.name_pars[i]
+                names.append(n)
+                values.append(sl.GetValue())
+        self.par.updateParams(names,values) 
+    def reset(self):
+        for cb,sl in zip(self.checkboxes,self.sliders):
+            cb.SetValue(0) # reset check box
+            sl.SetValue(self.sdef)
     def on_cb(self,event):
         # if checkbox is unchecked, reset the slider to default
         # if checkbox is checked --> unchecked : reset to default
         # if checkbox is unchecked --> checked : don't do anything
-        if not self.cb.GetValue():
-            self.slider.SetValue(self.sdef)
+        cb = event.GetEventObject()
+        sl = self.sliders[self.checkboxes.index(cb)]
+        if not cb.GetValue():
+            sl.SetValue(self.sdef)
 

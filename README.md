@@ -22,6 +22,14 @@ The pic that comes when you run ResVisard is album art of **Joy Division | Unkno
 
 _Sidenote disclaimer: I haven't checked out the album yet. I put it because it is a pop-culture reference._
 
+#### LOGIC
+
+_ResVisard_ is supposed to be a tool to visualize the effect of random (hence those sliders) flucuations in the parameters. 
+It is not made to be exact. Slider value tells us how away from the initial value is our current parameter value. Mathematically, 
+
+$p_i = p_{i-1} + \lambda \cdot s \cdot \mu_{p,i-1}$
+
+$p_i$ is parameter value at step $i$. $\lambda$ is a constant. $s$ is the slider value. $\mu_{p,i}$ is the uncertainity in $p_i$.
 
 ## PyLK
 _Inspired by plk and has Python, hence_

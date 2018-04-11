@@ -5,7 +5,8 @@ import wx
 import sys
 from param import Param
 from tempo2res import Tempo2Res
-
+import logging
+logging.basicConfig(filename='visres.log', level=logging.INFO)
 import matplotlib
 matplotlib.use('WXAgg')
 from matplotlib.figure import Figure
@@ -29,7 +30,7 @@ class VisRes(wx.Frame):
         self.timfile = sys.argv[2]
         # le OOP
         self.myres = Tempo2Res(timfile=self.timfile,parfile=self.parfile)
-        self.myres.fit()    
+        self.myres.fit(self.parfile,self.timfile)    
         wx.Frame.__init__(self, None, -1, self.title)
         self.sliders = [] # container to hold sliders
 
@@ -69,6 +70,8 @@ class VisRes(wx.Frame):
         #
         # self.canvas.mpl_connect('pick_event', self.on_pick)
     def plotter(self,toa,res,toaerr):
+        # self.axes.clear()
+        self.axes.cla()
         self.axes.errorbar(toa,res,yerr=1e-6*toaerr,fmt='.',c='green')
         self.axes.set_title("Visualize Residuals")
         self.axes.set_xlabel('MJD')
@@ -147,13 +150,28 @@ class VisRes(wx.Frame):
         self.xfig, self.yfig = 900,self.dy-40
         self.pnl_plot  = wx.Panel(self,pos=(20,20), size=(self.xfig,self.yfig))#,size=(self.dx-180,self.dy-40))
         # self.pnl_plot.SetForegroundColour('Blue')
-        self.fitb = wx.Button(self,pos=(930,20),size=(50,self.dy-200),style=wx.BU_EXACTFIT,label='FIT')
+        self.fitb = wx.Button(self,pos=(930,20),size=(60,self.dy/2-100),style=wx.BU_EXACTFIT,label='FIT')
+        self.fitb.Bind(wx.EVT_BUTTON,self.on_fit)
+        self.resetb = wx.Button(self,pos=(930,self.dy/2-80),size=(60,self.dy/2-100),style=wx.BU_EXACTFIT,label='RESET')
+        self.resetb.Bind(wx.EVT_BUTTON,self.on_reset)
         ####
-    def on_fit(self):
+    def on_reset(self,event):
+        self.pnl_param.reset()
+        self.myres.fit(self.parfile,self.timfile)
+        self.plotter(self.myres.toas,self.myres.res,self.myres.toaerr)
+    def on_fit(self,event):
         '''
         Perhaps the main fuction
         '''
-        
+        # Read params from Param
+        # Update PAR file
+        # Compute residuals
+        # Plot
+        self.pnl_param.update_book() 
+        self.myres.fit(pfile='./.temp_par_file',tfile='test.tim')
+        logging.info('Refitting')
+        # print "hdhahha"
+        self.plotter(self.myres.toas,self.myres.res,self.myres.toaerr)
 def main():
     ex = wx.App()
     VisRes(None)

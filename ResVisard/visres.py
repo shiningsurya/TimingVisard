@@ -70,12 +70,13 @@ class VisRes(wx.Frame):
         #
         # self.canvas.mpl_connect('pick_event', self.on_pick)
     def plotter(self,toa,res,toaerr):
-        # self.axes.clear()
-        self.axes.cla()
+        self.axes.clear()
+        # self.axes.cla()
         self.axes.errorbar(toa,res,yerr=1e-6*toaerr,fmt='.',c='green')
         self.axes.set_title("Visualize Residuals")
         self.axes.set_xlabel('MJD')
         self.axes.set_ylabel('Residuals')
+        self.canvas.draw()
     def create_menu(self):
         '''
         On the title bar wale

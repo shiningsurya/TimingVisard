@@ -67,8 +67,15 @@ class ParIO(object):
         # this is why Python is cool
         for pname, pval in zip(names,vals):
             pidx = self.name_pars.index(pname) 
+            '''
+            Update logic
+            ------------
+            Slider gives the magnitude
+            
+            '''
+            self.val_pars[pidx] = str(float(self.val_pars[pidx]) + (1e5 * float(self.uncer_pars[pidx]) * float(pval) )) 
             # finds the index in name_pars
-            self.val_pars[pidx] = pval
+            # self.val_pars[pidx] = pval
         # write it to file
         self.__update_temp_par__()
 
@@ -97,3 +104,4 @@ if __name__ == "__main__":
     print "The number of parameters parsed is {}".format(cf.npars)
     print "The name of the pulsar is {}".format(cf.pulsar_name)
     cf.updateParams(['F0','DM'],['100.000','200.000'])
+
